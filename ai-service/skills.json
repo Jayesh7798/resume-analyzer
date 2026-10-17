@@ -1,0 +1,129 @@
+[
+  { "name": "Java", "category": "Language", "aliases": [] },
+  { "name": "Python", "category": "Language", "aliases": [] },
+  {
+    "name": "JavaScript",
+    "category": "Language",
+    "aliases": ["js", "ecmascript"]
+  },
+  { "name": "TypeScript", "category": "Language", "aliases": [] },
+  { "name": "C++", "category": "Language", "aliases": [] },
+  { "name": "C#", "category": "Language", "aliases": [] },
+  { "name": "Kotlin", "category": "Language", "aliases": [] },
+  { "name": "PHP", "category": "Language", "aliases": [] },
+  { "name": "SQL", "category": "Language", "aliases": [] },
+  { "name": "HTML", "category": "Frontend", "aliases": ["html5"] },
+  { "name": "CSS", "category": "Frontend", "aliases": ["css3"] },
+  {
+    "name": "React",
+    "category": "Frontend",
+    "aliases": ["react.js", "reactjs"]
+  },
+  { "name": "Angular", "category": "Frontend", "aliases": [] },
+  { "name": "Vue.js", "category": "Frontend", "aliases": ["vue", "vuejs"] },
+  { "name": "Next.js", "category": "Frontend", "aliases": ["nextjs"] },
+  { "name": "Redux", "category": "Frontend", "aliases": [] },
+  { "name": "Tailwind CSS", "category": "Frontend", "aliases": ["tailwind"] },
+  { "name": "Bootstrap", "category": "Frontend", "aliases": [] },
+  { "name": "Spring Boot", "category": "Backend", "aliases": ["springboot"] },
+  { "name": "Spring Framework", "category": "Backend", "aliases": [] },
+  { "name": "Spring MVC", "category": "Backend", "aliases": [] },
+  { "name": "Spring Security", "category": "Backend", "aliases": [] },
+  {
+    "name": "Spring Data JPA",
+    "category": "Backend",
+    "aliases": ["spring data"]
+  },
+  { "name": "Hibernate", "category": "Backend", "aliases": [] },
+  { "name": "JPA", "category": "Backend", "aliases": [] },
+  {
+    "name": "REST API",
+    "category": "Backend",
+    "aliases": [
+      "rest apis",
+      "restful api",
+      "restful apis",
+      "restful web services"
+    ]
+  },
+  {
+    "name": "Microservices",
+    "category": "Backend",
+    "aliases": ["microservice"]
+  },
+  {
+    "name": "JWT",
+    "category": "Backend",
+    "aliases": ["json web token", "json web tokens"]
+  },
+  {
+    "name": "Node.js",
+    "category": "Backend",
+    "aliases": ["nodejs", "node js"]
+  },
+  { "name": "Express.js", "category": "Backend", "aliases": ["expressjs"] },
+  { "name": "FastAPI", "category": "Backend", "aliases": [] },
+  { "name": "Flask", "category": "Backend", "aliases": [] },
+  { "name": "Django", "category": "Backend", "aliases": [] },
+  { "name": "Maven", "category": "Backend", "aliases": [] },
+  { "name": "Gradle", "category": "Backend", "aliases": [] },
+  { "name": "Swagger", "category": "Backend", "aliases": ["openapi"] },
+  { "name": "Kafka", "category": "Messaging", "aliases": ["apache kafka"] },
+  { "name": "RabbitMQ", "category": "Messaging", "aliases": [] },
+  { "name": "MySQL", "category": "Database", "aliases": [] },
+  { "name": "PostgreSQL", "category": "Database", "aliases": ["postgres"] },
+  { "name": "MongoDB", "category": "Database", "aliases": ["mongo"] },
+  { "name": "Redis", "category": "Database", "aliases": [] },
+  { "name": "SQLite", "category": "Database", "aliases": [] },
+  { "name": "Firebase", "category": "Database", "aliases": [] },
+  { "name": "Docker", "category": "DevOps & Cloud", "aliases": [] },
+  { "name": "Kubernetes", "category": "DevOps & Cloud", "aliases": ["k8s"] },
+  {
+    "name": "AWS",
+    "category": "DevOps & Cloud",
+    "aliases": ["amazon web services"]
+  },
+  { "name": "Azure", "category": "DevOps & Cloud", "aliases": [] },
+  { "name": "Google Cloud", "category": "DevOps & Cloud", "aliases": ["gcp"] },
+  { "name": "Jenkins", "category": "DevOps & Cloud", "aliases": [] },
+  {
+    "name": "CI/CD",
+    "category": "DevOps & Cloud",
+    "aliases": ["cicd", "ci cd"]
+  },
+  { "name": "Nginx", "category": "DevOps & Cloud", "aliases": [] },
+  { "name": "Linux", "category": "DevOps & Cloud", "aliases": [] },
+  { "name": "Git", "category": "Tools", "aliases": [] },
+  { "name": "GitHub", "category": "Tools", "aliases": [] },
+  { "name": "GitLab", "category": "Tools", "aliases": [] },
+  { "name": "Postman", "category": "Tools", "aliases": [] },
+  { "name": "JUnit", "category": "Testing", "aliases": [] },
+  { "name": "Mockito", "category": "Testing", "aliases": [] },
+  { "name": "Selenium", "category": "Testing", "aliases": [] },
+  { "name": "Machine Learning", "category": "AI/ML", "aliases": ["ml"] },
+  { "name": "Deep Learning", "category": "AI/ML", "aliases": [] },
+  {
+    "name": "NLP",
+    "category": "AI/ML",
+    "aliases": ["natural language processing"]
+  },
+  { "name": "scikit-learn", "category": "AI/ML", "aliases": ["sklearn"] },
+  { "name": "TensorFlow", "category": "AI/ML", "aliases": [] },
+  { "name": "PyTorch", "category": "AI/ML", "aliases": [] },
+  { "name": "Pandas", "category": "AI/ML", "aliases": [] },
+  { "name": "NumPy", "category": "AI/ML", "aliases": [] },
+  { "name": "spaCy", "category": "AI/ML", "aliases": [] },
+  {
+    "name": "Data Structures",
+    "category": "Concepts",
+    "aliases": ["dsa", "data structures and algorithms"]
+  },
+  {
+    "name": "OOP",
+    "category": "Concepts",
+    "aliases": ["object oriented programming", "object-oriented programming"]
+  },
+  { "name": "Design Patterns", "category": "Concepts", "aliases": [] },
+  { "name": "Agile", "category": "Concepts", "aliases": [] },
+  { "name": "Scrum", "category": "Concepts", "aliases": [] }
+]
