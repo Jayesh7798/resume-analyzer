@@ -1,0 +1,165 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import api from "../api/client";
+import ScoreResult from "../components/ScoreResult";
+
+export default function RecommendedPage() {
+  const [resumes, setResumes] = useState([]);
+  const [resumeId, setResumeId] = useState("");
+  const [recs, setRecs] = useState([]);
+  const [loadingResumes, setLoadingResumes] = useState(true);
+  const [loadingRecs, setLoadingRecs] = useState(false);
+  const [error, setError] = useState("");
+  const [open, setOpen] = useState({}); // jobId -> details expanded
+  const [status, setStatus] = useState({}); // jobId -> { type, text }
+  const [busy, setBusy] = useState({}); // jobId -> true while applying
+
+  // load the candidate's analyzed resumes once
+  useEffect(() => {
+    async function init() {
+      try {
+        const { data } = await api.get("/resumes/my");
+        const analyzed = data.filter((r) => r.status === "ANALYZED");
+        setResumes(analyzed);
+        if (analyzed.length > 0) setResumeId(String(analyzed[0].id));
+      } catch {
+        setError("Could not load your resumes.");
+      } finally {
+        setLoadingResumes(false);
+      }
+    }
+    init();
+  }, []);
+
+  // reload recommendations whenever the selected resume changes
+  useEffect(() => {
+    if (!resumeId) return;
+
+    async function load() {
+      setLoadingRecs(true);
+      setError("");
+      setOpen({});
+      setStatus({});
+      try {
+        const { data } = await api.get("/jobs/recommended", {
+          params: { resumeId: Number(resumeId), limit: 10 },
+        });
+        setRecs(data);
+      } catch (err) {
+        setRecs([]);
+        if (err.response?.status === 503) {
+          setError("The matching service is unavailable. Try again shortly.");
+        } else if (!err.response) {
+          setError("Cannot reach the server. Is the backend running?");
+        } else {
+          setError("Could not load recommendations.");
+        }
+      } finally {
+        setLoadingRecs(false);
+      }
+    }
+    load();
+  }, [resumeId]);
+
+  function setJobStatus(jobId, type, text) {
+    setStatus((prev) => ({ ...prev, [jobId]: { type, text } }));
+  }
+
+  async function apply(jobId) {
+    setBusy((prev) => ({ ...prev, [jobId]: true }));
+    setJobStatus(jobId, "", "");
+    try {
+      await api.post(`/jobs/${jobId}/apply`, { resumeId: Number(resumeId) });
+      setJobStatus(jobId, "success", "Application submitted.");
+    } catch (err) {
+      if (err.response?.status === 409) {
+        setJobStatus(jobId, "error", "You have already applied to this job.");
+      } else if (err.response?.status === 503) {
+        setJobStatus(jobId, "error", "The matching service is unavailable. Try again shortly.");
+      } else {
+        setJobStatus(jobId, "error", "Could not submit the application.");
+      }
+    } finally {
+      setBusy((prev) => ({ ...prev, [jobId]: false }));
+    }
+  }
+
+  function toggle(jobId) {
+    setOpen((prev) => ({ ...prev, [jobId]: !prev[jobId] }));
+  }
+
+  if (loadingResumes) return <p>Loading...</p>;
+
+  if (resumes.length === 0) {
+    return (
+      <div className="panel">
+        <h2>Recommended jobs</h2>
+        <p className="error">
+          You need an analyzed resume to get recommendations.{" "}
+          <Link to="/candidate/resumes">Upload one first</Link>.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="panel">
+        <h2>Recommended jobs</h2>
+        <p className="muted">Jobs ranked by how well they fit the resume you choose.</p>
+        <div className="row">
+          <label htmlFor="resume">Resume:</label>
+          <select id="resume" value={resumeId} onChange={(e) => setResumeId(e.target.value)}>
+            {resumes.map((r) => (
+              <option key={r.id} value={r.id}>{r.fileName}</option>
+            ))}
+          </select>
+        </div>
+        {error && <p className="error">{error}</p>}
+      </div>
+
+      {loadingRecs ? (
+        <p>Ranking jobs...</p>
+      ) : recs.length === 0 ? (
+        !error && <div className="panel"><p>No jobs have been posted yet.</p></div>
+      ) : (
+        recs.map((rec, index) => {
+          const total = rec.matchedSkills.length + rec.missingSkills.length;
+          return (
+            <div className="panel" key={rec.jobId}>
+              <div className="rec-head">
+                <div className="rank">#{index + 1}</div>
+                <div className="rec-title">
+                  <h3>
+                    {rec.title} <small className="muted">at {rec.company}</small>
+                  </h3>
+                  <p className="muted">
+                    {rec.location || "Location not specified"} · {rec.matchedSkills.length} of {total} required skills matched
+                  </p>
+                </div>
+                <div className="score-pill">{rec.overallScore}%</div>
+              </div>
+
+              <div className="row">
+                <button className="secondary" onClick={() => toggle(rec.jobId)}>
+                  {open[rec.jobId] ? "Hide details" : "Show details"}
+                </button>
+                <button disabled={busy[rec.jobId]} onClick={() => apply(rec.jobId)}>
+                  {busy[rec.jobId] ? "Applying..." : "Apply"}
+                </button>
+              </div>
+
+              {status[rec.jobId]?.text && (
+                <p className={status[rec.jobId].type === "success" ? "success" : "error"}>
+                  {status[rec.jobId].text}
+                </p>
+              )}
+
+              {open[rec.jobId] && <ScoreResult result={rec} />}
+            </div>
+          );
+        })
+      )}
+    </>
+  );
+}

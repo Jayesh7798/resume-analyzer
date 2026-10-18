@@ -231,3 +231,38 @@ pre.text {
   background: #fee2e2;
   color: #991b1b;
 }
+.rec-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.rec-title {
+  flex: 1;
+}
+
+.rec-title h3,
+.rec-title p {
+  margin: 0;
+}
+
+.rank {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #1d4ed8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.score-pill {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+}

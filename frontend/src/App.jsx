@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import ResumesPage from "./pages/ResumesPage";
 import RecruiterHome from "./pages/RecruiterHome";
 import JobsPage from "./pages/JobsPage";
+import RecommendedPage from "./pages/RecommendedPage";
 
 function Home() {
   const { user } = useAuth();
@@ -34,10 +35,7 @@ export default function App() {
         <Route index element={<Navigate to="resumes" replace />} />
         <Route path="resumes" element={<ResumesPage />} />
         <Route path="jobs" element={<JobsPage />} />
-        <Route
-          path="recommended"
-          element={<p>Recommendations coming next.</p>}
-        />
+        <Route path="recommended" element={<RecommendedPage />} />
       </Route>
 
       <Route
