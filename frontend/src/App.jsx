@@ -1,10 +1,12 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./auth/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CandidateLayout from "./components/CandidateLayout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import CandidateHome from "./pages/CandidateHome";
+import ResumesPage from "./pages/ResumesPage";
 import RecruiterHome from "./pages/RecruiterHome";
+import JobsPage from "./pages/JobsPage";
 
 function Home() {
   const { user } = useAuth();
@@ -20,14 +22,24 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+
       <Route
         path="/candidate"
         element={
           <ProtectedRoute role="CANDIDATE">
-            <CandidateHome />
+            <CandidateLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<Navigate to="resumes" replace />} />
+        <Route path="resumes" element={<ResumesPage />} />
+        <Route path="jobs" element={<JobsPage />} />
+        <Route
+          path="recommended"
+          element={<p>Recommendations coming next.</p>}
+        />
+      </Route>
+
       <Route
         path="/recruiter"
         element={
