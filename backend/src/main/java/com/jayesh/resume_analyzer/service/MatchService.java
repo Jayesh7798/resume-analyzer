@@ -64,7 +64,7 @@ public class MatchService {
         MatchResult result;
         try {
             result = aiServiceClient.match(resume.getExtractedText(), job.getDescription(),
-                    resumeSkills, jobSkills);
+                    resumeSkills, jobSkills, job.getMinExperience());
         } catch (Exception e) {
             log.warn("Matching failed: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
@@ -77,7 +77,8 @@ public class MatchService {
             a.setResume(resume);
             a.setJob(job);
             a.setSkillScore(result.skillScore());
-            a.setTextScore(result.textScore());
+            a.setSemanticScore(result.semanticScore());
+            a.setFitScore(result.fitScore());
             a.setOverallScore(result.overallScore());
             a.setMatchedSkills(String.join(",", result.matchedSkills()));
             a.setMissingSkills(String.join(",", result.missingSkills()));
@@ -97,7 +98,7 @@ public class MatchService {
 
     private AnalysisResponse toResponse(Analysis a, Long resumeId, Job job) {
         return new AnalysisResponse(a.getId(), resumeId, job.getId(), job.getTitle(), job.getCompany(),
-                a.getSkillScore(), a.getTextScore(), a.getOverallScore(),
+                a.getSkillScore(), a.getSemanticScore(), a.getFitScore(), a.getOverallScore(),
                 splitSkills(a.getMatchedSkills()), splitSkills(a.getMissingSkills()),
                 a.getExplanation(), a.getCreatedAt());
     }

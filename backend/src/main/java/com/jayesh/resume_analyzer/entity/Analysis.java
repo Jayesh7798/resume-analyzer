@@ -30,8 +30,11 @@ public class Analysis {
     @Column(name = "skill_score", nullable = false)
     private double skillScore;
 
-    @Column(name = "text_score", nullable = false)
-    private double textScore;
+    @Column(name = "semantic_score", nullable = false)
+    private double semanticScore;
+
+    @Column(name = "fit_score", nullable = false)
+    private double fitScore;
 
     @Column(name = "overall_score", nullable = false)
     private double overallScore;

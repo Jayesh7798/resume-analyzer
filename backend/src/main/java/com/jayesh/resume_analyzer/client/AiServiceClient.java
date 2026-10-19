@@ -45,6 +45,7 @@ public class AiServiceClient {
         String text = response.get("extracted_text").toString();
         return new AiAnalysis(text, parseSkills(response.get("skills")));
     }
+
     public List<ExtractedSkill> extractSkills(String text) {
         Map<String, Object> response = restClient.post()
                 .uri("/extract-skills")
@@ -59,13 +60,14 @@ public class AiServiceClient {
         return parseSkills(response.get("skills"));
     }
 
-    public MatchResult match(String resumeText, String jobText,
-                             List<String> resumeSkills, List<String> jobSkills) {
+    public MatchResult match(String resumeText, String jobText, List<String> resumeSkills,
+                             List<String> jobSkills, int minExperience) {
         Map<String, Object> body = Map.of(
                 "resume_text", resumeText,
                 "job_text", jobText,
                 "resume_skills", resumeSkills,
-                "job_skills", jobSkills);
+                "job_skills", jobSkills,
+                "min_experience", minExperience);
 
         Map<String, Object> r = restClient.post()
                 .uri("/match")
@@ -79,27 +81,22 @@ public class AiServiceClient {
         }
         return new MatchResult(
                 toDouble(r.get("skill_score")),
-                toDouble(r.get("text_score")),
+                toDouble(r.get("semantic_score")),
+                toDouble(r.get("fit_score")),
                 toDouble(r.get("overall_score")),
                 toStringList(r.get("matched_skills")),
                 toStringList(r.get("missing_skills")),
                 r.get("explanation") == null ? "" : r.get("explanation").toString());
     }
 
-    private double toDouble(Object value) {
-        return value instanceof Number n ? n.doubleValue() : 0.0;
-    }
-
-    private List<String> toStringList(Object value) {
-        if (value instanceof List<?> list) {
-            return list.stream().map(String::valueOf).toList();
-        }
-        return List.of();
-    }
     public List<RankedJob> rank(String resumeText, List<String> resumeSkills,
                                 List<RankJobInput> jobs) {
         List<Map<String, Object>> jobMaps = jobs.stream()
-                .map(j -> Map.<String, Object>of("id", j.id(), "text", j.text(), "skills", j.skills()))
+                .map(j -> Map.<String, Object>of(
+                        "id", j.id(),
+                        "text", j.text(),
+                        "skills", j.skills(),
+                        "min_experience", j.minExperience()))
                 .toList();
 
         Map<String, Object> body = Map.of(
@@ -125,7 +122,8 @@ public class AiServiceClient {
                     ranked.add(new RankedJob(
                             m.get("job_id") instanceof Number id ? id.longValue() : -1L,
                             toDouble(m.get("skill_score")),
-                            toDouble(m.get("text_score")),
+                            toDouble(m.get("semantic_score")),
+                            toDouble(m.get("fit_score")),
                             toDouble(m.get("overall_score")),
                             toStringList(m.get("matched_skills")),
                             toStringList(m.get("missing_skills")),
@@ -135,6 +133,7 @@ public class AiServiceClient {
         }
         return ranked;
     }
+
     private List<ExtractedSkill> parseSkills(Object raw) {
         List<ExtractedSkill> skills = new ArrayList<>();
         if (raw instanceof List<?> list) {
@@ -148,5 +147,16 @@ public class AiServiceClient {
             }
         }
         return skills;
+    }
+
+    private double toDouble(Object value) {
+        return value instanceof Number n ? n.doubleValue() : 0.0;
+    }
+
+    private List<String> toStringList(Object value) {
+        if (value instanceof List<?> list) {
+            return list.stream().map(String::valueOf).toList();
+        }
+        return List.of();
     }
 }

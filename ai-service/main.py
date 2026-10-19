@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 from extractor import extract_docx_text, extract_pdf_text
 from matcher import compute_match
+from semantic import embed_resume
 from skills import extract_skills
 
 app = FastAPI(title="Resume AI Service")
@@ -17,12 +18,14 @@ class MatchRequest(BaseModel):
     job_text: str
     resume_skills: list[str]
     job_skills: list[str]
+    min_experience: int = 0
 
 
 class RankJob(BaseModel):
     id: int
     text: str
     skills: list[str]
+    min_experience: int = 0
 
 
 class RankRequest(BaseModel):
@@ -76,14 +79,20 @@ def extract_skills_from_text(req: TextRequest):
 
 @app.post("/match")
 def match(req: MatchRequest):
-    return compute_match(req.resume_text, req.job_text, req.resume_skills, req.job_skills)
+    return compute_match(
+        req.resume_text, req.job_text, req.resume_skills, req.job_skills, req.min_experience
+    )
 
 
 @app.post("/rank")
 def rank(req: RankRequest):
+    resume_embeddings = embed_resume(req.resume_text)  # embedded once, reused for every job
     results = []
     for job in req.jobs:
-        scores = compute_match(req.resume_text, job.text, req.resume_skills, job.skills)
+        scores = compute_match(
+            req.resume_text, job.text, req.resume_skills, job.skills,
+            job.min_experience, resume_embeddings,
+        )
         results.append({"job_id": job.id, **scores})
     results.sort(key=lambda r: r["overall_score"], reverse=True)
     return {"results": results}

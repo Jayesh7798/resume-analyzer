@@ -2,12 +2,15 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./auth/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CandidateLayout from "./components/CandidateLayout";
+import RecruiterLayout from "./components/RecruiterLayout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ResumesPage from "./pages/ResumesPage";
-import RecruiterHome from "./pages/RecruiterHome";
 import JobsPage from "./pages/JobsPage";
 import RecommendedPage from "./pages/RecommendedPage";
+import MyJobsPage from "./pages/MyJobsPage";
+import PostJobPage from "./pages/PostJobPage";
+import CandidatesPage from "./pages/CandidatesPage";
 
 function Home() {
   const { user } = useAuth();
@@ -42,10 +45,15 @@ export default function App() {
         path="/recruiter"
         element={
           <ProtectedRoute role="RECRUITER">
-            <RecruiterHome />
+            <RecruiterLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<Navigate to="jobs" replace />} />
+        <Route path="jobs" element={<MyJobsPage />} />
+        <Route path="jobs/:jobId/candidates" element={<CandidatesPage />} />
+        <Route path="post" element={<PostJobPage />} />
+      </Route>
     </Routes>
   );
 }

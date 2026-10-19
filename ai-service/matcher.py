@@ -1,13 +1,17 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# interim weights; will be replaced by the full 3-part formula later
-SKILL_WEIGHT = 0.70
-TEXT_WEIGHT = 0.30
+from fit import compute_fit
+from semantic import embed_resume, semantic_similarity
+
+# the hybrid formula from the project document
+SKILL_WEIGHT = 0.50
+SEMANTIC_WEIGHT = 0.30
+FIT_WEIGHT = 0.20
 
 
-def text_similarity(resume_text: str, job_text: str) -> float:
-    """TF-IDF cosine similarity, returned as 0-100."""
+def keyword_similarity(resume_text: str, job_text: str) -> float:
+    """TF-IDF cosine similarity (keyword baseline), returned as 0-100."""
     if not resume_text.strip() or not job_text.strip():
         return 0.0
     vectorizer = TfidfVectorizer(stop_words="english")
@@ -27,26 +31,47 @@ def skill_match(resume_skills: list[str], job_skills: list[str]):
     return score, matched, missing
 
 
-def build_explanation(skill_score, text_score, matched, missing, job_skill_count) -> str:
+def build_explanation(skill_score, semantic_score, fit_score, matched, missing,
+                      job_skill_count, fit_notes) -> str:
+    parts = []
     if job_skill_count == 0:
-        return "No known skills were detected in the job description, so the skill score is 0."
-    parts = [f"Matched {len(matched)} of {job_skill_count} skills required by the job ({skill_score:.1f}%)."]
-    if missing:
-        parts.append("Missing skills: " + ", ".join(missing) + ".")
-    parts.append(f"Text similarity between resume and job description is {text_score:.1f}%.")
+        parts.append("No known skills were detected in the job description, so the skill score is 0.")
+    else:
+        parts.append(f"Matched {len(matched)} of {job_skill_count} skills required by the job ({skill_score:.1f}%).")
+        if missing:
+            parts.append("Missing skills: " + ", ".join(missing) + ".")
+    parts.append(f"Semantic similarity between resume and job description is {semantic_score:.1f}%.")
+    fit_text = f"Experience/education fit is {fit_score:.0f}%."
+    if fit_notes:
+        fit_text += " " + " ".join(fit_notes)
+    parts.append(fit_text)
     return " ".join(parts)
 
 
 def compute_match(resume_text: str, job_text: str,
-                  resume_skills: list[str], job_skills: list[str]) -> dict:
+                  resume_skills: list[str], job_skills: list[str],
+                  min_experience: int = 0, resume_embeddings=None) -> dict:
     skill_score, matched, missing = skill_match(resume_skills, job_skills)
-    text_score = text_similarity(resume_text, job_text)
-    overall = SKILL_WEIGHT * skill_score + TEXT_WEIGHT * text_score
+
+    if resume_embeddings is None:
+        resume_embeddings = embed_resume(resume_text)
+    semantic_score = semantic_similarity(resume_embeddings, job_text)
+
+    fit_score, fit_notes = compute_fit(resume_text, job_text, min_experience)
+    keyword_score = keyword_similarity(resume_text, job_text)  # kept for comparison only
+
+    overall = (SKILL_WEIGHT * skill_score
+               + SEMANTIC_WEIGHT * semantic_score
+               + FIT_WEIGHT * fit_score)
+
     return {
         "skill_score": round(skill_score, 1),
-        "text_score": round(text_score, 1),
+        "semantic_score": round(semantic_score, 1),
+        "fit_score": round(fit_score, 1),
+        "keyword_score": round(keyword_score, 1),  # not used in the overall score
         "overall_score": round(overall, 1),
         "matched_skills": matched,
         "missing_skills": missing,
-        "explanation": build_explanation(skill_score, text_score, matched, missing, len(job_skills)),
+        "explanation": build_explanation(skill_score, semantic_score, fit_score,
+                                         matched, missing, len(job_skills), fit_notes),
     }

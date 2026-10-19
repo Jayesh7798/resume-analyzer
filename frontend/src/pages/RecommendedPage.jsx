@@ -75,7 +75,11 @@ export default function RecommendedPage() {
       if (err.response?.status === 409) {
         setJobStatus(jobId, "error", "You have already applied to this job.");
       } else if (err.response?.status === 503) {
-        setJobStatus(jobId, "error", "The matching service is unavailable. Try again shortly.");
+        setJobStatus(
+          jobId,
+          "error",
+          "The matching service is unavailable. Try again shortly.",
+        );
       } else {
         setJobStatus(jobId, "error", "Could not submit the application.");
       }
@@ -106,12 +110,20 @@ export default function RecommendedPage() {
     <>
       <div className="panel">
         <h2>Recommended jobs</h2>
-        <p className="muted">Jobs ranked by how well they fit the resume you choose.</p>
+        <p className="muted">
+          Jobs ranked by how well they fit the resume you choose.
+        </p>
         <div className="row">
           <label htmlFor="resume">Resume:</label>
-          <select id="resume" value={resumeId} onChange={(e) => setResumeId(e.target.value)}>
+          <select
+            id="resume"
+            value={resumeId}
+            onChange={(e) => setResumeId(e.target.value)}
+          >
             {resumes.map((r) => (
-              <option key={r.id} value={r.id}>{r.fileName}</option>
+              <option key={r.id} value={r.id}>
+                {r.fileName}
+              </option>
             ))}
           </select>
         </div>
@@ -121,7 +133,11 @@ export default function RecommendedPage() {
       {loadingRecs ? (
         <p>Ranking jobs...</p>
       ) : recs.length === 0 ? (
-        !error && <div className="panel"><p>No jobs have been posted yet.</p></div>
+        !error && (
+          <div className="panel">
+            <p>No jobs have been posted yet.</p>
+          </div>
+        )
       ) : (
         recs.map((rec, index) => {
           const total = rec.matchedSkills.length + rec.missingSkills.length;
@@ -131,10 +147,13 @@ export default function RecommendedPage() {
                 <div className="rank">#{index + 1}</div>
                 <div className="rec-title">
                   <h3>
-                    {rec.title} <small className="muted">at {rec.company}</small>
+                    {rec.title}{" "}
+                    <small className="muted">at {rec.company}</small>
                   </h3>
                   <p className="muted">
-                    {rec.location || "Location not specified"} · {rec.matchedSkills.length} of {total} required skills matched
+                    {rec.location || "Location not specified"} ·{" "}
+                    {rec.matchedSkills.length} of {total} required skills
+                    matched
                   </p>
                 </div>
                 <div className="score-pill">{rec.overallScore}%</div>
@@ -144,13 +163,20 @@ export default function RecommendedPage() {
                 <button className="secondary" onClick={() => toggle(rec.jobId)}>
                   {open[rec.jobId] ? "Hide details" : "Show details"}
                 </button>
-                <button disabled={busy[rec.jobId]} onClick={() => apply(rec.jobId)}>
+                <button
+                  disabled={busy[rec.jobId]}
+                  onClick={() => apply(rec.jobId)}
+                >
                   {busy[rec.jobId] ? "Applying..." : "Apply"}
                 </button>
               </div>
 
               {status[rec.jobId]?.text && (
-                <p className={status[rec.jobId].type === "success" ? "success" : "error"}>
+                <p
+                  className={
+                    status[rec.jobId].type === "success" ? "success" : "error"
+                  }
+                >
                   {status[rec.jobId].text}
                 </p>
               )}

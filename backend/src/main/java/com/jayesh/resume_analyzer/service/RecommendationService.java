@@ -60,7 +60,7 @@ public class RecommendationService {
 
         List<RankJobInput> inputs = jobs.stream()
                 .map(j -> new RankJobInput(j.getId(), j.getDescription(),
-                        skillsByJob.getOrDefault(j.getId(), List.of())))
+                        skillsByJob.getOrDefault(j.getId(), List.of()), j.getMinExperience()))
                 .toList();
 
         List<RankedJob> ranked;
@@ -83,7 +83,7 @@ public class RecommendationService {
                         return null;
                     }
                     return new RecommendationResponse(job.getId(), job.getTitle(), job.getCompany(),
-                            job.getLocation(), rj.overallScore(), rj.skillScore(), rj.textScore(),
+                            job.getLocation(), rj.overallScore(), rj.skillScore(), rj.semanticScore(), rj.fitScore(),
                             rj.matchedSkills(), rj.missingSkills(), rj.explanation());
                 })
                 .filter(Objects::nonNull)

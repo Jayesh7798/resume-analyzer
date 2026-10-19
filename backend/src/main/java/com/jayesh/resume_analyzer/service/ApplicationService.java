@@ -69,7 +69,7 @@ public class ApplicationService {
                     rank++, ap.getId(),
                     ap.getCandidate().getId(), ap.getCandidate().getName(), ap.getCandidate().getEmail(),
                     ap.getResume().getId(),
-                    a.getOverallScore(), a.getSkillScore(), a.getTextScore(),
+                    a.getOverallScore(), a.getSkillScore(), a.getSemanticScore(), a.getFitScore(),
                     splitSkills(a.getMatchedSkills()), splitSkills(a.getMissingSkills()),
                     a.getExplanation(), ap.getCreatedAt()));
         }

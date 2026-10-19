@@ -8,11 +8,15 @@ export default function ScoreResult({ result }) {
         </div>
         <div>
           <span>{result.skillScore}%</span>
-          <small>Skills</small>
+          <small>Skills (50%)</small>
         </div>
         <div>
-          <span>{result.textScore}%</span>
-          <small>Text similarity</small>
+          <span>{result.semanticScore}%</span>
+          <small>Semantic (30%)</small>
+        </div>
+        <div>
+          <span>{result.fitScore}%</span>
+          <small>Experience/education (20%)</small>
         </div>
       </div>
 

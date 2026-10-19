@@ -5,6 +5,7 @@ import java.util.List;
 
 public record CandidateRankingResponse(int rank, Long applicationId, Long candidateId,
                                        String candidateName, String candidateEmail, Long resumeId,
-                                       double overallScore, double skillScore, double textScore,
+                                       double overallScore, double skillScore, double semanticScore,
+                                       double fitScore,
                                        List<String> matchedSkills, List<String> missingSkills,
                                        String explanation, LocalDateTime appliedAt) {}
