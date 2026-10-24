@@ -1,0 +1,34 @@
+{
+  "resumes": {
+    "R1": "B.Tech Computer Science student. Built a REST API with Java, Spring Boot and MySQL. Used JWT for authentication, Git and GitHub for version control, and Docker for deployment.",
+    "R2": "B.Tech student focused on frontend development. Built responsive web apps using React, JavaScript, HTML and CSS. Used Git and GitHub. Familiar with Redux and Tailwind CSS.",
+    "R3": "M.Tech student in data science. Built machine learning models using Python, Pandas, NumPy and scikit-learn. Worked on NLP projects with spaCy and TensorFlow. Used Git and SQL.",
+    "R4": "B.Tech Computer Science graduate. Full stack developer with Java, Spring Boot, React and JavaScript. Built REST APIs backed by PostgreSQL and designed the UI in HTML and CSS. Used Docker and Git.",
+    "R5": "Engineering student who developed server-side applications and web services handling user login, database access and API endpoints. Interested in building reliable backend systems."
+  },
+  "jobs": {
+    "J1": {
+      "text": "We are hiring a backend developer with Java, Spring Boot, REST API and MySQL experience. Knowledge of JWT and Docker is a plus.",
+      "min_experience": 0
+    },
+    "J2": {
+      "text": "Looking for a frontend developer with React, JavaScript, HTML and CSS experience to build responsive web interfaces.",
+      "min_experience": 0
+    },
+    "J3": {
+      "text": "We need a machine learning engineer with Python, scikit-learn, Pandas and NLP experience to build text classification models.",
+      "min_experience": 0
+    },
+    "J4": {
+      "text": "DevOps engineer needed with Docker, Kubernetes, Jenkins, Linux and AWS experience to manage CI/CD pipelines.",
+      "min_experience": 0
+    }
+  },
+  "labels": {
+    "R1": { "J1": 1, "J2": 0, "J3": 0, "J4": 0 },
+    "R2": { "J1": 0, "J2": 1, "J3": 0, "J4": 0 },
+    "R3": { "J1": 0, "J2": 0, "J3": 1, "J4": 0 },
+    "R4": { "J1": 1, "J2": 1, "J3": 0, "J4": 0 },
+    "R5": { "J1": 1, "J2": 0, "J3": 0, "J4": 0 }
+  }
+}
